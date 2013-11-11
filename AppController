@@ -38,24 +38,24 @@ function inicializarAuth(){
 $this->Auth->loginError = ‘El nombre de usuario y/o la contraseña no son correctos. Por favor, inténtalo otra vez’;
 $this->Auth->authError = ‘Para entrar en la zona privada tienes que autenticarte’;
 
-$this->Session->write(‘Auth.redirect’, null);
+$this->Session->write('Auth.redirect', null);
 } // fin de function inicializarAuth
 
 public $components = array(
-‘Session’,
-‘Auth’ => array(
-‘loginRedirect’ => array(‘controller’ => ‘clasificados’, ‘action’ => ‘index’),
-‘logoutRedirect’ => array(‘controller’ => ‘clasificados’, ‘action’ => ‘index’),
-‘authorize’ => array(‘Controller’) // Added this line
+'Session',
+'Auth' => array(
+'loginRedirect' => array(‘controller’ => 'clasificados', 'action' => 'index'),
+'logoutRedirect' => array('controller' => 'clasificados', 'action' => 'index'),
+'authorize' => array('Controller') // Added this line
 )
 );
 
 public function beforeFilter()
 {
-$permissions = array(‘index’, ‘registro’);  // array con métodos públicos
+$permissions = array('index', 'registro','login');  // array con métodos públicos
 parent::beforeFilter();
 if ( $this->Auth->user() ):              // True si el usuario está logeado
-array_push($permissions, ‘publicar’, ‘borrar’,'modificar’);  // estos métodos sólo para usuarios logeados
+array_push($permissions, 'publicar', 'borrar','modificar');  // estos métodos sólo para usuarios logeados
 $this->inicializarAuth();
 endif;
 $this->Auth->allow($permissions);  // coloco permisos
@@ -65,7 +65,7 @@ $this->inicializarAuth();
 public function isAuthorized()
 {
 if (isset( $this->params[Configure::read('Routing.admin')] )): // si estoy en la zona admin
-if ( $this->Auth->user(‘role’) == ‘admin’ ):  // si soy un usuario logeado y del grupo admin
+if ( $this->Auth->user('role') == ‘admin’ ):  // si soy un usuario logeado y del grupo admin
 return true; // Welcome!
 endif;
 endif;
